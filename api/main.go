@@ -1,56 +1,41 @@
 package main
 
 import (
-	"encoding/json"
+	"article/handler"
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 )
 
-type User struct {
-	Name  string
-	Email string
+func middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t := time.Now()
+		next.ServeHTTP(w, r)
+		log.Println(time.Since(t))
+	})
 }
-type DB struct {
-	Users []User
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		a := r.Header.Get("a")
+		if a == "" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		fmt.Fprintln(w, "Authentication success")
+		next.ServeHTTP(w, r)
+	})
 }
-
-func (DB) CreateDB() DB {
-	return DB{
-		Users: []User{},
-	}
-}
-func (d *DB) createUser(user User) {
-	d.Users = append(d.Users, user)
-}
-func (d DB) getUser() []User {
-	return d.Users
-}
-
 func main() {
 	mux := http.NewServeMux()
-	db := DB{}
-	db.createUser(User{Name: "rayhan", Email: "rayhan@gmail.com"})
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
-
-		if r.Method == "GET" {
-			json.NewEncoder(w).Encode(db.getUser())
-
-		}
-		if r.Method == "POST" {
-			var user User
-			dec := json.NewDecoder(r.Body)
-			err := dec.Decode(&user)
-			if err != nil || user.Name == "" || user.Email == "" {
-				http.Error(w, "Bad request", http.StatusBadRequest)
-				return
-			}
-			db.createUser(user)
-			w.WriteHeader(201)
-			json.NewEncoder(w).Encode(user)
-		}
-	})
+	mux.Handle("GET /", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Hello world")
+	}))
+	// mux.Handle("GET /users", http.HandlerFunc(handler.GetUserHandler))
+	// add middleare
+	mux.Handle("GET /users", middleware(
+		AuthMiddleware(http.HandlerFunc(handler.GetUserHandler)),
+	))
 
 	fmt.Println("Listening on port 8080")
 	http.ListenAndServe(":8080", mux)
