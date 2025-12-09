@@ -2,30 +2,21 @@ package main
 
 import (
 	"article/handler"
+	"article/middleware"
+	"article/utils"
 	"fmt"
-	"log"
 	"net/http"
-	"time"
 )
 
-func middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		t := time.Now()
-		next.ServeHTTP(w, r)
-		log.Println(time.Since(t))
-	})
+type Middlewares func(http.Handler) http.Handler
+
+func Middleware(next http.Handler, mid ...Middlewares) http.Handler {
+	for _, m := range mid {
+		next = m(next)
+	}
+	return next
 }
-func AuthMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		a := r.Header.Get("a")
-		if a == "" {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-		fmt.Fprintln(w, "Authentication success")
-		next.ServeHTTP(w, r)
-	})
-}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.Handle("GET /", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,8 +24,10 @@ func main() {
 	}))
 	// mux.Handle("GET /users", http.HandlerFunc(handler.GetUserHandler))
 	// add middleare
-	mux.Handle("GET /users", middleware(
-		AuthMiddleware(http.HandlerFunc(handler.GetUserHandler)),
+	mux.Handle("GET /users", Middleware(
+		utils.Handler(handler.GetUserHandler),
+		middleware.Logger,
+		middleware.AuthMiddleware,
 	))
 
 	fmt.Println("Listening on port 8080")
