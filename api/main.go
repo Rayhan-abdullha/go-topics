@@ -8,17 +8,33 @@ import (
 	"net/http"
 )
 
+type MiddleWareManager struct {
+	middlewares []Middlewares
+}
+
+func (m *MiddleWareManager) Use(middlewares ...Middlewares) {
+	m.middlewares = append(m.middlewares, middlewares...)
+}
+
 type Middlewares func(http.Handler) http.Handler
 
 func Middleware(next http.Handler, mid ...Middlewares) http.Handler {
+
+	for _, m := range mid {
+		next = m(next)
+	}
+
 	for _, m := range mid {
 		next = m(next)
 	}
 	return next
 }
-
 func main() {
 	mux := http.NewServeMux()
+	// global middleware
+	m := &MiddleWareManager{}
+	m.Use(middleware.Logger, middleware.AuthMiddleware)
+
 	mux.Handle("GET /", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello world")
 	}))
@@ -26,7 +42,6 @@ func main() {
 	// add middleare
 	mux.Handle("GET /users", Middleware(
 		utils.Handler(handler.GetUserHandler),
-		middleware.Logger,
 		middleware.AuthMiddleware,
 	))
 

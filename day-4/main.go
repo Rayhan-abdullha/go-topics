@@ -11,8 +11,10 @@ type Middleware func(func(string) string) func(string) string
 // Chain ফাংশন: একাধিক middleware একসাথে apply করে
 func Chain(f func(string) string, middlewares ...Middleware) func(string) string {
 	for _, m := range middlewares {
-		f = m(f)
+		fmt.Println("m")
+		f = m(f) // f = helloMiddleware(f), f = uppercaseMiddleware(f)
 	}
+	// f("coder")
 	return f
 }
 func UppercaseMiddleware(next func(string) string) func(string) string {
