@@ -2,13 +2,25 @@ package rest
 
 import (
 	"article/config"
+	"article/rest/handlers/user"
 	middleware "article/rest/middlewares"
-	"article/rest/routes"
 	"fmt"
 	"net/http"
 )
 
-func Start(conf config.Config) {
+type Server struct {
+	userHandler *user.Handlers
+}
+
+func NewServer(
+	userHandler *user.Handlers,
+) *Server {
+	return &Server{
+		userHandler: userHandler,
+	}
+}
+
+func (server *Server) Start(conf config.Config) {
 	// global middleware
 	m := middleware.NewManager()
 	m.Use(
@@ -21,7 +33,9 @@ func Start(conf config.Config) {
 
 	h := m.WrapMux(mux)
 
-	routes.InitialRoute(mux, m)
+	// user route
+	server.userHandler.RegisterRoutes(mux, m)
+
 	port := ":" + conf.HttpPort
 	fmt.Println("Listening on port ", port)
 	http.ListenAndServe(port, h)

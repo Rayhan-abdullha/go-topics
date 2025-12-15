@@ -3,10 +3,12 @@ package cmd
 import (
 	"article/config"
 	"article/rest"
-	// "article/router"
+	"article/rest/handlers/user"
 )
 
 func Serve() {
 	conf := config.GetConfig()
-	rest.Start(conf)
+	userHandler := user.NewHandler()
+	server := rest.NewServer(userHandler)
+	server.Start(*conf)
 }
