@@ -1,7 +1,15 @@
 package main
 
-import "golang/interface/auth"
+import "fmt"
 
+// import "golang/interface/auth"
+type User interface{}
+
+func Auth(v User) {
+	fmt.Println(v)
+}
 func main() {
-	auth.Auth()
+	// auth.Auth()
+
+	Auth(3)
 }
