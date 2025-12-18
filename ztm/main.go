@@ -11,6 +11,8 @@ func main() {
 	// practice.Struct()
 	// practice.Struct1()
 
-	practice.Slice()
+	// practice.Slice()
 	// practice.Array()
+	// practice.Map()
+	practice.Pointer()
 }
