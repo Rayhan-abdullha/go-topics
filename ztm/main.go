@@ -14,5 +14,6 @@ func main() {
 	// practice.Slice()
 	// practice.Array()
 	// practice.Map()
-	practice.Pointer()
+	// practice.Pointer()
+	practice.ReceiverFunction()
 }
