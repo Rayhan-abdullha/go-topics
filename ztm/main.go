@@ -9,6 +9,8 @@ import "golang/ztm/practice"
 func main() {
 	// practice.Function()
 	// practice.Struct()
+	// practice.Struct1()
 
-	practice.Struct1()
+	practice.Slice()
+	// practice.Array()
 }
