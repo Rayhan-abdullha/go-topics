@@ -1,9 +1,10 @@
 package main
 
-import (
-	"pattern/singleton"
-)
+import repository "pattern/repository"
+
+// "pattern/singleton"
 
 func main() {
-	singleton.SingleTon()
+	// singleton.SingleTon()
+	repository.Main()
 }
