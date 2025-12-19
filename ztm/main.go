@@ -15,5 +15,9 @@ func main() {
 	// practice.Array()
 	// practice.Map()
 	// practice.Pointer()
-	practice.ReceiverFunction()
+	// practice.ReceiverFunction()
+	// practice.Practice()
+	// practice.Variadics()
+	practice.Interface()
+
 }
