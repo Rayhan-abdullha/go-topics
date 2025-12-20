@@ -1,7 +1,6 @@
-// domain/user_repository.go
 package domain
 
-type UserRepository interface {
-	FindByID(id int) (*User, error)
-	Save(user *User) error
+type User struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
