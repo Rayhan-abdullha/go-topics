@@ -17,6 +17,13 @@ func Serve() {
 		fmt.Println("connection error", err)
 		os.Exit(1)
 	}
+
+	err = db.MigrateDB(dbCon, "./migrations")
+	if err != nil {
+		fmt.Println("migration error", err)
+		os.Exit(1)
+	}
+
 	mid := middlewares.NewMiddleware(&conf)
 	server := rest.NewServer(
 		&conf,
