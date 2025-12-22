@@ -13,6 +13,7 @@ var configuration *Config
 type Config struct {
 	Version  string
 	HttpPort string
+	connStr  string
 }
 
 func loadConfig() {
@@ -30,9 +31,15 @@ func loadConfig() {
 		fmt.Println("Http port is required")
 		os.Exit(1)
 	}
+	connectionString := os.Getenv("DB_CONNECTION_STRING")
+	if connectionString == "" {
+		fmt.Println("Database connection string is required")
+		os.Exit(1)
+	}
 	configuration = &Config{
 		Version:  version,
 		HttpPort: port,
+		connStr:  connectionString,
 	}
 }
 

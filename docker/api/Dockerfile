@@ -4,6 +4,6 @@ RUN apt update && apt install -y golang-go
 
 WORKDIR /app
 
-COPY ./server.go ./server.go
+COPY ./server.go .
 
 CMD ["go", "run", "server.go"]
