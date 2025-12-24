@@ -1,22 +1,19 @@
 package db
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
-func GetConnectionString() string {
+func GetConnectionStr() string {
 	return "postgres://admin:secret@localhost:5432/article?sslmode=disable"
 }
-
 func NewConnection() (*sqlx.DB, error) {
-	db, err := sqlx.Connect("postgres", GetConnectionString())
+	db, err := sqlx.Connect("postgres", GetConnectionStr())
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Db is not connected!")
 	}
-
-	fmt.Println("Database connected successfully")
 	return db, nil
 }
