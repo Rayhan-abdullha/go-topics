@@ -16,7 +16,9 @@ func main() {
 		fmt.Fprintln(w, "products request", 200)
 	}))
 	mux.Handle("GET /users", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "user request", 200)
+		// send json response
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{"name": "John", "age": 30}`)
 	}))
 	fmt.Println("Server is listing..")
 	http.ListenAndServe(":8000", mux)
