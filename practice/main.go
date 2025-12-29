@@ -2,14 +2,19 @@ package main
 
 import (
 	"fmt"
-	"my-go/mathlib"
 )
 
-type Nums struct {
-	x int
+func increment() func() {
+	n := 0
+	count := func() {
+		n++
+	}
+	return count
 }
 
 func main() {
-	fmt.Println("main package")
-	mathlib.Add(3, 3)
+	count := increment()
+	count()
+	count()
+	fmt.Println(count)
 }

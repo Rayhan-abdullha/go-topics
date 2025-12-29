@@ -21,5 +21,5 @@ func main() {
 		fmt.Fprintln(w, `{"name": "John", "age": 30}`)
 	}))
 	fmt.Println("Server is listing..")
-	http.ListenAndServe(":8000", mux)
+	http.ListenAndServe(":7000", mux)
 }
