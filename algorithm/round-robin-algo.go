@@ -6,6 +6,9 @@ import (
 
 type ServerRequest map[string]int
 
+func addServer(ser ServerRequest, serverName string) {
+	ser[serverName] = 0
+}
 func roundRobinAlgo(ser ServerRequest, req int) {
 	var next string = "server1"
 	for i := 1; i <= req; i++ {
@@ -19,6 +22,8 @@ func roundRobinAlgo(ser ServerRequest, req int) {
 			case "server2":
 				next = "server3"
 			case "server3":
+				next = "server4"
+			case "server4":
 				next = "server1"
 			}
 		}
@@ -27,10 +32,11 @@ func roundRobinAlgo(ser ServerRequest, req int) {
 }
 
 func main() {
-	server := ServerRequest{
-		"server1": 0,
-		"server2": 0,
-		"server3": 0,
-	}
+	server := ServerRequest{}
+	addServer(server, "server1")
+	addServer(server, "server2")
+	addServer(server, "server3")
+	addServer(server, "server4")
+
 	roundRobinAlgo(server, 100)
 }
