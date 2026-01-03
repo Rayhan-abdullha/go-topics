@@ -4,17 +4,30 @@ import (
 	"fmt"
 )
 
-func increment() func() {
-	n := 0
-	count := func() {
-		n++
-	}
-	return count
+type User struct {
+	name string
 }
 
+// func (u *User) getUser() {
+// 	fmt.Println(u)
+// 	u.name = "developer"
+// }
+
 func main() {
-	count := increment()
-	count()
-	count()
-	fmt.Println(count)
+	// user := User{name: "coder"}
+	// user.getUser()
+	// fmt.Println(user)
+	// a := [5]int{1, 22, 3, 4, 3}
+	// b := []int{1, 22, 3, 4, 3}
+	// b[1] = 100
+	// a[1] = 200
+	// fmt.Println("a", a)
+	// fmt.Println("b", b)
+	// a := &user
+	// a.name = "changed"
+	// fmt.Println(user)
+
+	u := make([]int, 3, 5)
+	fmt.Println(u)
+
 }
