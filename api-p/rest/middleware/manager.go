@@ -1,6 +1,8 @@
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Middleware func(next http.Handler) http.Handler
 type Middlewares struct {
@@ -25,7 +27,6 @@ func (mng *Middlewares) With(next http.Handler, mid ...Middleware) http.Handler 
 }
 
 func (mng *Middlewares) WrapMux(mux http.Handler, mid ...Middleware) http.Handler {
-
 	// global middleware
 	for _, middleware := range mng.middlewares {
 		mux = middleware(mux)
