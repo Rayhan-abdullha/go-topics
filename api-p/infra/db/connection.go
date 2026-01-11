@@ -6,7 +6,7 @@ import (
 )
 
 func GetConnectionString() string {
-	return "postgres://admin:admin123@localhost:5433/mydb?sslmode=disable"
+	return "postgres://postgres:123456@localhost:5432/school?sslmode=disable"
 }
 
 func NewConnection() (*sqlx.DB, error) {

@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"server/config"
 	"server/infra/db"
+	productSvc "server/product"
 	"server/repo"
 	"server/rest"
 	"server/rest/handler/product"
@@ -15,6 +17,7 @@ func Serve() {
 	// database connection setup can be added here if needed
 	dbCon, err := db.NewConnection()
 	if err != nil {
+		fmt.Println("Error connecting to the database:")
 		panic(err)
 	}
 	err = db.MigrateDB(dbCon, "./migrations")
@@ -24,9 +27,12 @@ func Serve() {
 
 	productRepo := repo.NewProductRepo(dbCon)
 	middlewares := middleware.NewMiddleware(cnf)
+
+	productSvc := productSvc.NewService(productRepo)
+
 	productHandler := product.NewProductHandler(
 		middlewares,
-		productRepo,
+		productSvc,
 	)
 	rest := rest.NewServer(
 		cnf,

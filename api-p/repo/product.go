@@ -1,19 +1,16 @@
 package repo
 
-import "github.com/jmoiron/sqlx"
+import (
+	"server/domain"
+	"server/product"
 
-type Product struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Price       int    `json:"price"`
-	ImgUrl      string `json:"imageUrl"`
-}
+	"github.com/jmoiron/sqlx"
+)
 
 type ProductRepo interface {
-	Create(*Product) (*Product, error)
-	List() ([]*Product, error)
+	product.ProductRepo
 }
+
 type productRepo struct {
 	dbCon *sqlx.DB
 }
@@ -24,7 +21,7 @@ func NewProductRepo(dbCon *sqlx.DB) ProductRepo {
 	}
 }
 
-func (r *productRepo) Create(pd *Product) (*Product, error) {
+func (r *productRepo) Create(pd *domain.Product) (*domain.Product, error) {
 	query := `INSERT INTO products (title, description, price, image_url)
 VALUES ($1, $2, $3, $4)
 RETURNING id, title, description, price, image_url;`
@@ -36,7 +33,7 @@ RETURNING id, title, description, price, image_url;`
 	}
 	return pd, nil
 }
-func (r *productRepo) List() ([]*Product, error) {
+func (r *productRepo) List() ([]*domain.Product, error) {
 	query := `
 		SELECT id, title, description, price, image_url
 		FROM products
@@ -49,10 +46,10 @@ func (r *productRepo) List() ([]*Product, error) {
 	}
 	defer rows.Close()
 
-	products := make([]*Product, 0)
+	products := make([]*domain.Product, 0)
 
 	for rows.Next() {
-		var p Product
+		var p domain.Product
 		err := rows.Scan(
 			&p.ID,
 			&p.Title,

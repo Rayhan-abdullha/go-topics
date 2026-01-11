@@ -3,16 +3,16 @@ package product
 import (
 	"encoding/json"
 	"net/http"
-	"server/repo"
+	"server/domain"
 	"server/utils"
 )
 
-func (p *Product) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	// Implementation for creating a product
-	pd := repo.Product{}
+	pd := domain.Product{}
 	json.NewDecoder(r.Body).Decode(&pd)
 
-	createdProduct, err := p.productRepo.Create(&pd)
+	createdProduct, err := h.svc.Create(&pd)
 	if err != nil {
 		utils.ErrorData(w,
 			map[string]string{"error": "Failed to create product"},

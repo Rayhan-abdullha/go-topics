@@ -5,12 +5,12 @@ import (
 	"server/rest/middleware"
 )
 
-func (p *Product) RegisterRoutes(mux *http.ServeMux, mng *middleware.Middlewares) {
+func (h *Handler) RegisterRoutes(mux *http.ServeMux, mng *middleware.Middlewares) {
 	mux.Handle("GET /products", mng.With(
-		http.HandlerFunc(p.GetProductHandler),
+		http.HandlerFunc(h.GetProductHandler),
 	))
 	mux.Handle("POST /products", mng.With(
-		http.HandlerFunc(p.CreateProductHandler),
-		p.middlewares.AuthMid,
+		http.HandlerFunc(h.CreateProductHandler),
+		h.middlewares.AuthMid,
 	))
 }

@@ -5,8 +5,8 @@ import (
 	"server/utils"
 )
 
-func (p *Product) GetProductHandler(w http.ResponseWriter, r *http.Request) {
-	productList, err := p.productRepo.List()
+func (h *Handler) GetProductHandler(w http.ResponseWriter, r *http.Request) {
+	productList, err := h.svc.List()
 	if err != nil {
 		utils.ErrorData(w, map[string]string{"error": "Failed to retrieve products"}, http.StatusInternalServerError)
 		return
