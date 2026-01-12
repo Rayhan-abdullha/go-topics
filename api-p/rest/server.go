@@ -38,7 +38,21 @@ func (server *Server) Start() {
 	mux.Handle("POST /register", mng.With(
 		http.HandlerFunc(handler.Registration),
 	))
-
+	mux.Handle("GET /profile", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reqQuery := r.URL.Query()
+		name := reqQuery.Get("name")
+		email := reqQuery.Get("email")
+		password := reqQuery.Get("password")
+		if name == "" || email == "" || password == "" {
+			fmt.Fprintln(w, "credential error", 400)
+			return
+		}
+		if email == "r@gmail.com" && name == "rayhan" && password == "1234" {
+			fmt.Fprintln(w, "This is the profile page.")
+		} else {
+			fmt.Fprintln(w, "You are unathorize", 401)
+		}
+	}))
 	server.productHandler.RegisterRoutes(mux, mng)
 
 	muxWrapper := mng.WrapMux(mux)
